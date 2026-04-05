@@ -38,6 +38,13 @@
 - Cookie 设置 HttpOnly、SameSite=Lax 和 Secure 标志
 - Token 使用 SHA256 签名验证
 
+### 两步验证（2FA）
+
+- 支持 **TOTP**（身份验证器应用）和 **邮箱验证码** 两种方式
+- TOTP 使用标准 RFC 6238 算法，兼容 Google Authenticator、Microsoft Authenticator 等应用
+- 提供 **备用恢复码**（8位数字，一次性使用），防止验证器丢失导致无法登录
+- 开启或关闭2FA需要验证当前密码
+
 ### 安全 HTTP 头
 
 - X-Frame-Options
