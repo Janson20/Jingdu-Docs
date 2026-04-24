@@ -54,7 +54,7 @@ POST /api/deepseek/v1/chat/completions
 {
   "id": "chatcmpl-xxx",
   "object": "chat.completion",
-  "model": "deepseek-chat",
+  "model": "deepseek-v4-flash",
   "choices": [
     {
       "index": 0,

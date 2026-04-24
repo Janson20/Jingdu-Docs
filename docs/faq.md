@@ -42,14 +42,28 @@
 
 目前支持以下模型：
 
-- DeepSeek Chat（通用对话）
-- DeepSeek Reasoner（深度推理）
+- DeepSeek V4 Flash（通用对话，模型名：deepseek-v4-flash）
+- DeepSeek V4 Pro（深度推理，模型名：deepseek-v4-pro）
 - Qwen Plus（通义千问增强版）
 - Qwen Flash（通义千问快速版）
+
+> 旧版模型名称（deepseek-chat、deepseek-reasoner）仍可兼容使用。
 
 ### AI 聊天记录会保存吗？
 
 聊天记录保存在你的浏览器本地，不会上传到服务器。清除浏览器数据会导致聊天记录丢失。
+
+### 什么是 FIM 补全模式？
+
+FIM（Fill In the Middle）补全模式是 DeepSeek 模型的一项功能，你可以提供内容的开头和结尾，AI 会自动补全中间的部分。适用于续写、代码补全等场景。
+
+### FIM 补全怎么收费？
+
+FIM 补全采用与普通聊天相同的 **基于 token 的阶梯计费**，根据实际输入和输出 token 数量计算积分。开头和结尾内容总长度不超过 1000 字符。仅支持 DeepSeek 系列模型。
+
+### AI 聊天消耗多少积分？
+
+积分消耗取决于实际的 token 用量和所选模型，最低 1 积分。用量越大，后续 token 的兑换率越高。详见 [积分系统说明](/features/ai-chat#积分系统)。
 
 ## 等级相关
 
