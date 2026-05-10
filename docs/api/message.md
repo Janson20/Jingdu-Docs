@@ -290,3 +290,133 @@ GET /message/api/block-status/<target_uuid>
 |------|------|
 | is_blocked | 当前用户是否拉黑了目标用户 |
 | is_blocked_by | 当前用户是否被目标用户拉黑 |
+
+## 公告 API
+
+### 获取公告列表
+
+```
+GET /message/api/announcements
+```
+
+**查询参数**:
+
+| 参数 | 类型 | 默认值 | 说明 |
+|------|------|--------|------|
+| page | int | 1 | 页码 |
+| per_page | int | 20 | 每页数量（最大 50） |
+
+调用此接口会自动将当前用户的所有公告标记为已读。
+
+**响应示例**:
+
+```json
+{
+  "success": true,
+  "data": {
+    "items": [
+      {
+        "id": 1,
+        "title": "系统维护公告",
+        "content": "系统将于今晚进行维护...",
+        "sender_uuid": "管理员UUID",
+        "sender_name": "管理员",
+        "created_at": "2025-01-15 10:00:00",
+        "credits_reward": 0,
+        "credits_expires_at": null,
+        "has_credits_reward": false,
+        "credits_expired": false,
+        "credits_claimed": false
+      }
+    ],
+    "pagination": {
+      "page": 1,
+      "per_page": 20,
+      "total": 1,
+      "total_pages": 1
+    }
+  }
+}
+```
+
+> 当公告携带 AI 积分奖励时，`has_credits_reward` 为 `true`，`credits_reward` 为积分数量，`credits_expires_at` 为过期时间，`credits_claimed` 表示当前用户是否已领取，`credits_expired` 表示是否已过期。
+
+### 领取公告积分
+
+```
+POST /message/api/announcements/<ann_id>/claim
+```
+
+领取公告附带的 AI 积分（需在 30 天有效期内手动领取，每个用户限领一次）。
+
+**响应示例（成功）**:
+
+```json
+{
+  "success": true,
+  "message": "成功领取 100 AI积分",
+  "data": {
+    "credits": 100
+  }
+}
+```
+
+**响应示例（失败）**:
+
+```json
+{
+  "success": false,
+  "message": "已经领取过"
+}
+```
+
+### 获取未读公告数
+
+```
+GET /message/api/announcements/unread-count
+```
+
+**响应示例**:
+
+```json
+{
+  "success": true,
+  "data": {
+    "unread_count": 3
+  }
+}
+```
+
+### 标记所有公告为已读
+
+```
+POST /message/api/announcements/read
+```
+
+**响应示例**:
+
+```json
+{
+  "success": true,
+  "message": "已标记为已读"
+}
+```
+
+### 获取总未读（私信 + 公告）
+
+```
+GET /message/api/total-unread
+```
+
+调用此接口时，所有新消息（status=0）会自动标记为已送达（status=1）。
+
+**响应示例**:
+
+```json
+{
+  "success": true,
+  "data": {
+    "total_unread": 8
+  }
+}
+```
