@@ -29,4 +29,8 @@ features:
     details: 集成 DeepSeek 和 Qwen 模型，智能 AI 助手
   - title: 资源分享
     details: 分享有用的软件资源，版本管理，网盘链接分享
+  - title: 法律协议
+    details: 隐私政策、用户协议、社区规范、版权政策，保护你和平台的合法权益
+  - title: 安全保障
+    details: 多层安全机制，敏感词过滤、CSRF保护、两步验证、数据加密
 ---
