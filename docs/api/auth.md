@@ -143,3 +143,55 @@ POST /send-code
 - 最多尝试 5 次
 - 发送间隔 60 秒
 :::
+
+## 邮箱验证码登录
+
+```
+POST /api/auth/login
+```
+
+使用邮箱地址和验证码登录。
+
+### 请求参数
+
+| 参数 | 类型 | 必填 | 说明 |
+|------|------|------|------|
+| email | string | 是 | 邮箱地址 |
+| code | string | 是 | 邮箱验证码 |
+
+## API 登录（传统方式）
+
+```
+POST /api/login
+```
+
+旧版登录接口。
+
+### 请求参数
+
+| 参数 | 类型 | 必填 | 说明 |
+|------|------|------|------|
+| username | string | 是 | 用户名 |
+| password | string | 是 | 密码 |
+
+### 响应示例
+
+```json
+{
+  "success": true,
+  "token": "base64_encoded_token_string"
+}
+```
+
+## 登出
+
+```
+GET /api/auth/logout
+```
+
+清除当前 Session，使 Token 失效。
+
+## OpenAPI 规范
+
+- **Swagger UI**: 访问 `/api/docs` 查看交互式 API 文档
+- **OpenAPI 规范**: 访问 `/api/openapi.json` 获取 OpenAPI 3.0 规范文件

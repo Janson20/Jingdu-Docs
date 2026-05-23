@@ -100,6 +100,71 @@ POST /api/books/<book_id>/chapters
 GET /api/books/<book_id>/chapters/<chapter_id>
 ```
 
+## 更新章节内容
+
+```
+PUT /api/books/<book_id>/chapters/<chapter_id>
+```
+
+**需要认证**（Token）
+
+### 请求参数
+
+| 参数 | 类型 | 必填 | 说明 |
+|------|------|------|------|
+| token | string | 是 | 认证 Token |
+| title | string | 否 | 章节标题 |
+| content | string | 否 | 章节内容 |
+
+## 删除章节
+
+```
+DELETE /api/books/<book_id>/chapters/<chapter_id>
+```
+
+**需要认证**（Token）
+
+### 请求参数
+
+| 参数 | 类型 | 必填 | 说明 |
+|------|------|------|------|
+| token | string | 是 | 认证 Token |
+
+## 旧版兼容接口
+
+以下接口为早期版本保留，建议使用上方标准 RESTful 接口：
+
+### 通过作者获取书籍
+
+```
+GET /api/get-books-by-author?author=<作者名>
+```
+
+### 获取书籍信息
+
+```
+GET /api/get-book-info?book_id=<书籍ID>
+```
+
+### 获取书籍目录
+
+```
+GET /api/get-book-catalog?book_id=<书籍ID>
+```
+
+### 添加章节（旧版）
+
+```
+POST /api/add-chapter
+```
+
+| 参数 | 类型 | 必填 | 说明 |
+|------|------|------|------|
+| token | string | 是 | 认证 Token |
+| book_id | string | 是 | 书籍 ID |
+| title | string | 是 | 章节标题 |
+| content | string | 是 | 章节内容 |
+
 ## 获取所有分类
 
 ```
