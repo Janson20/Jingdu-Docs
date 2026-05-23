@@ -305,6 +305,8 @@ GET /message/api/announcements
 |------|------|--------|------|
 | page | int | 1 | 页码 |
 | per_page | int | 20 | 每页数量（最大 50） |
+| filter | string | "" | 筛选：`with_attachment` 含附件，`without_attachment` 不含附件 |
+| sub | string | "" | 子筛选（需 `filter=with_attachment`）：`unclaimed` 未领取，`claimed` 已领取，`expired` 已过期 |
 
 调用此接口会自动将当前用户的所有公告标记为已读。
 
