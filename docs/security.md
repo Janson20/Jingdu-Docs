@@ -76,10 +76,10 @@
 
 | 协议 | 说明 | 链接 |
 |------|------|------|
-| 隐私政策 | 个人信息收集、使用与保护说明 | [查看](/privacy) |
-| 用户协议 | 使用服务的权利与义务 | [查看](/user-agreement) |
-| 社区规范 | 用户生成内容的行为准则和违规处理 | [查看](/community) |
-| 版权政策 | 版权保护措施和侵权投诉流程 | [查看](/copyright) |
+| 隐私政策 | 个人信息收集、使用与保护说明 | [查看](https://jingdu.qzz.io/privacy) |
+| 用户协议 | 使用服务的权利与义务 | [查看](https://jingdu.qzz.io/user-agreement) |
+| 社区规范 | 用户生成内容的行为准则和违规处理 | [查看](https://jingdu.qzz.io/community) |
+| 版权政策 | 版权保护措施和侵权投诉流程 | [查看](https://jingdu.qzz.io/copyright) |
 | AI服务条款 | AI聊天服务的计费规则与免责声明 | 首次使用AI时显示 |
 
 使用净读服务即表示你同意上述协议。如有疑问，请联系 janson20@qq.com 或 janson20@js20tech.cn。
