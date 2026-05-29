@@ -29,7 +29,13 @@ GET /api/forum
 }
 ```
 
-帖子以随机推荐排序展示，增加内容曝光。
+帖子以热榜算法排序：
+
+```
+热榜得分 = (view×1 + reply×3 + like×4 + bookmark×5 + repost×6 + 2) / (天数 + 1)
+```
+
+综合浏览量、回复数、点赞、收藏、转发五个维度的互动数据，结合时间衰减（新帖有优势，老帖靠互动量维持位置），并加入微量随机扰动避免同分帖子顺序固定。
 
 ## 获取帖子详情
 
@@ -143,3 +149,174 @@ GET /api/bili_qml
 ```
 
 返回 B 站千粉新号排行榜数据。
+
+---
+
+## 帖子互动（点赞/收藏/转发）
+
+### 点赞帖子
+
+```
+POST /forum/like/<post_id>
+```
+
+**需要认证**（Session）
+
+Toggle 模式：已点赞则取消，未点赞则点赞。
+
+**响应示例**：
+
+```json
+{
+  "success": true,
+  "liked": true,
+  "like_count": 42
+}
+```
+
+### 收藏帖子
+
+```
+POST /forum/bookmark/<post_id>
+```
+
+**需要认证**（Session）
+
+Toggle 模式：已收藏则取消，未收藏则收藏。
+
+**响应示例**：
+
+```json
+{
+  "success": true,
+  "bookmarked": true,
+  "bookmark_count": 15
+}
+```
+
+### 转发帖子
+
+```
+POST /forum/repost/<post_id>
+```
+
+**需要认证**（Session）
+
+将帖子摘要通过私信转发给好友。排除已拉黑用户和系统公告（ID=0）。
+
+**请求体**（JSON）：
+
+```json
+{
+  "target_uuid": "接收方UUID"
+}
+```
+
+**响应示例**：
+
+```json
+{
+  "success": true,
+  "message": "转发成功",
+  "conversation_id": 123
+}
+```
+
+::: tip 经验奖励
+- 帖子作者被点赞 +1 经验（每日上限 50 次）
+- 帖子作者被收藏 +2 经验（每日上限 30 次）
+- 帖子作者被转发 +3 经验（每日上限 20 次）
+:::
+
+### 获取帖子卡片数据
+
+```
+GET /api/forum/<post_id>/card
+```
+
+**无需认证**。返回帖子公开数据，用于转发/嵌入展示。数据由服务端实时查询，不可伪造。
+
+**响应示例**：
+
+```json
+{
+  "success": true,
+  "data": {
+    "id": 1,
+    "title": "帖子标题",
+    "author": "用户A",
+    "summary": "前150字摘要...",
+    "date": "2025-01-15 10:30",
+    "view_count": 100,
+    "reply_count": 5,
+    "like_count": 10,
+    "bookmark_count": 3,
+    "repost_count": 2
+  }
+}
+```
+
+### 获取帖子互动状态
+
+```
+GET /api/forum/<post_id>/status
+```
+
+返回当前登录用户对该帖的点赞/收藏状态，以及三项计数。
+
+**响应示例**：
+
+```json
+{
+  "success": true,
+  "data": {
+    "liked": true,
+    "bookmarked": false,
+    "like_count": 42,
+    "bookmark_count": 15,
+    "repost_count": 8
+  }
+}
+```
+
+### 获取私信联系人（转发用）
+
+```
+GET /forum/api/contacts
+```
+
+**需要认证**（Session）
+
+返回当前用户的私信联系人列表（排除系统公告和已拉黑用户）。
+
+**响应示例**：
+
+```json
+{
+  "success": true,
+  "data": [
+    { "uuid": "xxx", "username": "书友A", "conversation_id": 1 },
+    { "uuid": "yyy", "username": "书友B", "conversation_id": 2 }
+  ]
+}
+```
+
+### 我的点赞
+
+```
+GET /forum/my-likes
+```
+
+**需要认证**（Session）
+
+返回当前用户点赞过的所有帖子列表（分页）。
+
+### 我的收藏
+
+```
+GET /forum/my-bookmarks
+```
+
+**需要认证**（Session）
+
+返回当前用户收藏过的所有帖子列表（分页）。
