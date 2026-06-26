@@ -17,6 +17,7 @@ export default defineConfig({
           { text: '论坛交流', link: '/features/forum' },
           { text: '资源分享', link: '/features/resource' },
           { text: 'AI 聊天', link: '/features/ai-chat' },
+          { text: 'AI 推荐', link: '/features/recommend' },
           { text: '私信', link: '/features/message' },
           { text: '等级系统', link: '/features/level' },
         ]
@@ -44,6 +45,7 @@ export default defineConfig({
           { text: '论坛交流', link: '/features/forum' },
           { text: '资源分享', link: '/features/resource' },
           { text: 'AI 聊天', link: '/features/ai-chat' },
+          { text: 'AI 推荐', link: '/features/recommend' },
           { text: '私信', link: '/features/message' },
           { text: '等级系统', link: '/features/level' },
           { text: '聊天室', link: '/features/chat' },

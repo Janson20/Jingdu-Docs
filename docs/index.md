@@ -26,7 +26,9 @@ features:
   - title: 💬 论坛交流
     details: 社区讨论，支持楼中楼回复、表情转换、IP属地展示
   - title: 🤖 AI 聊天
-    details: 集成 DeepSeek V4 和 Qwen 模型，支持文件上传解析、FIM补全、LaTeX公式
+    details: 集成 DeepSeek V4 和 Qwen 模型，支持文件上传解析、FIM补全、LaTeX公式、一键生成PPTX演示文稿
+  - title: 🎓 AI 教程
+    details: 保姆级AI功能教程，从注册到精通，手把手教你玩转AI助手
   - title: 📦 资源分享
     details: 分享软件资源，版本管理，网盘链接分享，支持版本历史
   - title: 💌 私信
