@@ -44,8 +44,10 @@
 
 - DeepSeek V4 Flash（通用对话，模型名：deepseek-v4-flash）
 - DeepSeek V4 Pro（深度推理，模型名：deepseek-v4-pro）
-- Qwen Plus（通义千问增强版）
-- Qwen Flash（通义千问快速版）
+- Qwen3.7 Plus（千问增强版）
+- Qwen3.6 Flash（千问快速版）
+- Qwen3.5 Flash（千问轻量版）
+- Qwen3.7 Max（千问旗舰版）
 
 > 旧版模型名称（deepseek-chat、deepseek-reasoner）仍可兼容使用。
 
