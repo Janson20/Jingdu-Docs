@@ -43,6 +43,7 @@
 目前支持以下模型：
 
 - DeepSeek V4 Flash（通用对话，模型名：deepseek-v4-flash）
+- DeepSeek V4 Flash Vision（图像理解，模型名：deepseek-v4-flash-vision-exp，实验性）
 - DeepSeek V4 Pro（深度推理，模型名：deepseek-v4-pro）
 - Qwen3.7 Plus（千问增强版）
 - Qwen3.6 Flash（千问快速版）
@@ -67,7 +68,7 @@ FIM 补全采用与普通聊天相同的 **基于 token 的阶梯计费**，根�
 
 积分消耗取决于实际的 token 用量和所选模型，最低 1 积分。用量越大，后续 token 的兑换率越高。详见 [积分系统说明](/features/ai-chat#积分系统)。
 
-> **大额调用价格说明**：第三阶梯（>10 万 token）的兑换率已调整为与官方单价持平，大额调用无中间差价。平台利润主要来自小额调用的前两阶梯定价及积分向上取整机制。
+> **大额调用价格说明**：第三阶梯（>10 万 token）的兑换率最高，大额调用更划算。具体兑换率会随上游算力价格波动不定期调整，请以 [AI 聊天页](/features/ai-chat#积分系统) 或 [充值页面](/ai_chat/recharge) 的费率表为准。
 
 ### AI 聊天支持数学公式吗？
 

@@ -61,6 +61,7 @@ export default defineConfig({
           { text: '书籍接口', link: '/api/books' },
           { text: '博客接口', link: '/api/blog' },
           { text: '论坛接口', link: '/api/forum' },
+          { text: '段评接口', link: '/api/para-comment' },
           { text: '资源接口', link: '/api/resource' },
           { text: '私信接口', link: '/api/message' },
           { text: 'DeepSeek 代理', link: '/api/deepseek' },

@@ -61,5 +61,6 @@ API 支持两种认证方式：
 | 书籍 | 书籍 CRUD、章节管理 | [书籍接口](/api/books) |
 | 博客 | 博客 CRUD、评论 | [博客接口](/api/blog) |
 | 论坛 | 帖子 CRUD、评论 | [论坛接口](/api/forum) |
+| 段评 | 段落评论、点赞、回复 | [段评接口](/api/para-comment) |
 | 资源 | 资源 CRUD、版本管理 | [资源接口](/api/resource) |
 | DeepSeek | AI 对话代理 | [DeepSeek 代理](/api/deepseek) |
