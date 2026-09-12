@@ -1,6 +1,6 @@
 {
   "name": "jingdu-docs",
-  "version": "1.0.4",
+  "version": "1.1.0",
   "description": "净读用户帮助文档",
   "scripts": {
     "docs:dev": "vitepress dev docs",
