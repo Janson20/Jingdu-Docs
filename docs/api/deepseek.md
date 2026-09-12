@@ -16,7 +16,7 @@ GET /api/deepseek/v1/models
 
 **需要认证**（Token 或 Session）
 
-返回所有可用的 AI 模型列表。视觉模型 `deepseek-v4-flash-vision-exp`（DeepSeek V4 Flash Vision）支持图片输入，可与 Files API 配合使用。
+返回所有可用的 AI 模型列表。`deepseek-flash`（DeepSeek-V4.1-Flash，由原 DeepSeek V4 Flash 与 V4 Flash Vision 合并升级）支持图片输入，可与 Files API 配合使用。
 
 ## 聊天补全
 
@@ -38,7 +38,7 @@ POST /api/deepseek/v1/chat/completions
 
 ### 多模态（图片）请求示例
 
-视觉模型 `deepseek-v4-flash-vision-exp` 支持三种图片输入方式（与官方一致）：
+`deepseek-flash`（DeepSeek-V4.1-Flash）支持三种图片输入方式（与官方一致）：
 
 - **方式一：base64 内联**（`image_url`，图片 ≤ 32 MiB，请求体 ≤ 48 MiB）
 - **方式二：外部图片 URL**（`image_url`，URL ≤ 8192 字符，图片 ≤ 32 MiB）
@@ -46,7 +46,7 @@ POST /api/deepseek/v1/chat/completions
 
 ```json
 {
-  "model": "deepseek-v4-flash-vision-exp",
+  "model": "deepseek-flash",
   "messages": [
     {
       "role": "user",
@@ -137,7 +137,7 @@ DELETE /api/deepseek/v1/files/<file_id>
 {
   "id": "chatcmpl-xxx",
   "object": "chat.completion",
-  "model": "deepseek-v4-flash",
+  "model": "deepseek-flash",
   "choices": [
     {
       "index": 0,

@@ -225,15 +225,14 @@ Token 格式: `base64_json.sha256_signature`（服务端实现细节，App 端�
   "success": true,
   "data": {
     "ai_models": [
-      {"id": "deepseek-v4-flash", "name": "DeepSeek V4 Flash"},
-      {"id": "deepseek-v4-flash-vision-exp", "name": "DeepSeek V4 Flash Vision"},
+      {"id": "deepseek-flash", "name": "DeepSeek-V4.1-Flash"},
       {"id": "deepseek-v4-pro", "name": "DeepSeek V4 Pro"},
       {"id": "qwen3.7-plus", "name": "Qwen3.7 Plus"},
       {"id": "qwen3.6-flash", "name": "Qwen3.6 Flash"},
       {"id": "qwen3.5-flash", "name": "Qwen3.5 Flash"},
       {"id": "qwen3.7-max", "name": "Qwen3.7 Max"}
     ],
-    "vision_models": ["deepseek-v4-flash-vision-exp", "qwen3.7-plus", "qwen3.6-flash", "qwen3.5-flash"],
+    "vision_models": ["deepseek-flash", "qwen3.7-plus", "qwen3.6-flash", "qwen3.5-flash"],
     "personas": [
       {
         "id": "writing",
@@ -514,7 +513,7 @@ Token 格式: `base64_json.sha256_signature`（服务端实现细节，App 端�
 | 字段 | 类型 | 必填 | 默认值 | 说明 |
 |------|------|------|--------|------|
 | message | string | 否* | "" | 用户输入的文本消息。如果 `images` 不为空，此字段可为空 |
-| model | string | 否 | "deepseek-v4-flash" | 模型 ID，见 config 接口的 ai_models |
+| model | string | 否 | "deepseek-flash" | 模型 ID，见 config 接口的 ai_models |
 | mode | string | 否 | "html" | `"html"` 正常模式，`"pptx"` 生成 PPTX 演示文稿 |
 | book_search | bool | 否 | false | 是否允许 AI 搜索净读书库 |
 | history | array | 否 | [] | 历史消息数组，每条格式 `{content: string, isUser: bool}` |
@@ -522,14 +521,13 @@ Token 格式: `base64_json.sha256_signature`（服务端实现细节，App 端�
 | images | array | 否 | [] | Base64 Data URL 数组，仅 vision_models 支持 |
 | session_id | string | 否 | null | 聊天会话 ID，传此值会自动保存对话到历史记录 |
 | file_attached | bool | 否 | false | 本次消息是否附带了文件内容 |
-| deep_think | bool | 否 | false | 当 model 为 deepseek-v4-flash 时设为 true 自动切换为 deepseek-v4-pro |
+| deep_think | bool | 否 | false | 当 model 为 deepseek-flash 时设为 true 自动切换为 deepseek-v4-pro |
 
 **models 说明**:
 
 | id | 提供商 | 说明 |
 |----|--------|------|
-| deepseek-v4-flash | DeepSeek | 快速便宜，默认模型 |
-| deepseek-v4-flash-vision-exp | DeepSeek | 视觉模型，支持图片（实验性），与 V4 Flash 同价 |
+| deepseek-flash | DeepSeek | DeepSeek-V4.1-Flash，默认模型；由原 V4 Flash 与 V4 Flash Vision 合并升级，同时支持通用对话与图片输入 |
 | deepseek-v4-pro | DeepSeek | 深度思考，适合复杂推理 |
 | qwen3.7-plus | Qwen | 通义千问增强版，支持图片 |
 | qwen3.6-flash | Qwen | 通义千问快速版，支持图片 |
@@ -541,7 +539,7 @@ Token 格式: `base64_json.sha256_signature`（服务端实现细节，App 端�
 ```json
 {
   "message": "用 Python 写一个二分查找算法",
-  "model": "deepseek-v4-flash",
+  "model": "deepseek-flash",
   "mode": "html",
   "history": [
     {"content": "你会写代码吗？", "isUser": true},
@@ -748,13 +746,13 @@ Fill-in-the-Middle 补全。**需要登录**，**仅支持 DeepSeek 模型**。
 
 | 字段 | 类型 | 必填 | 默认值 | 说明 |
 |------|------|------|--------|------|
-| model | string | 否 | "deepseek-v4-flash" | 必须为 DeepSeek 系列 |
+| model | string | 否 | "deepseek-flash" | 必须为 DeepSeek 系列 |
 | prompt | string | 是 | - | 开头内容，最长 1000 字符（含 suffix） |
 | suffix | string | 否 | "" | 结尾内容，可选 |
 
 ```json
 {
-  "model": "deepseek-v4-flash",
+  "model": "deepseek-flash",
   "prompt": "def binary_search(arr, target):",
   "suffix": "return -1"
 }
@@ -922,7 +920,7 @@ Fill-in-the-Middle 补全。**需要登录**，**仅支持 DeepSeek 模型**。
       {
         "session_id": "a1b2c3d4...",
         "title": "Python 学习",
-        "model": "deepseek-v4-flash",
+        "model": "deepseek-flash",
         "message_count": 6,
         "total_cost": 8,
         "created_at": "2026-07-25T10:00:00",
@@ -944,11 +942,11 @@ Fill-in-the-Middle 补全。**需要登录**，**仅支持 DeepSeek 模型**。
 
 | 字段 | 类型 | 必填 | 默认值 | 说明 |
 |------|------|------|--------|------|
-| model | string | 否 | "deepseek-v4-flash" | 模型 ID |
+| model | string | 否 | "deepseek-flash" | 模型 ID |
 | title | string | 否 | "新对话" | 会话标题 |
 
 ```json
-{"model": "deepseek-v4-flash", "title": "Python 学习"}
+{"model": "deepseek-flash", "title": "Python 学习"}
 ```
 
 **Response 201**:
@@ -988,7 +986,7 @@ Fill-in-the-Middle 补全。**需要登录**，**仅支持 DeepSeek 模型**。
     "session": {
       "session_id": "a1b2c3d4...",
       "title": "Python 学习",
-      "model": "deepseek-v4-flash",
+      "model": "deepseek-flash",
       "message_count": 2,
       "total_cost": 3,
       "created_at": "2026-07-25T10:00:00",
@@ -1372,7 +1370,7 @@ Fill-in-the-Middle 补全。**需要登录**，**仅支持 DeepSeek 模型**。
     },
     "models": [
       {
-        "model": "deepseek-v4-flash",
+        "model": "deepseek-flash",
         "count": 12,
         "total_cost": 30,
         "total_input": 2800,
@@ -1418,7 +1416,7 @@ Fill-in-the-Middle 补全。**需要登录**，**仅支持 DeepSeek 模型**。
     "requests": [
       {
         "id": 1,
-        "model": "deepseek-v4-flash",
+        "model": "deepseek-flash",
         "source": "app_chat",
         "input_tokens": 50,
         "output_tokens": 120,
@@ -1565,7 +1563,9 @@ Fill-in-the-Middle 补全。**需要登录**，**仅支持 DeepSeek 模型**。
 
 | 旧名称（web 端兼容） | 新名称（建议用） |
 |----------------------|------------------|
-| deepseek-chat | deepseek-v4-flash |
+| deepseek-chat | deepseek-flash |
+| deepseek-v4-flash | deepseek-flash |
+| deepseek-v4-flash-vision-exp | deepseek-flash |
 | deepseek-reasoner | deepseek-v4-pro |
 | qwen-plus | qwen3.7-plus |
 | qwen-flash | qwen3.6-flash |

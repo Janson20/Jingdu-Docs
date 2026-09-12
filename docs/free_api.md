@@ -6,7 +6,7 @@
 
 ## 一、免费 DeepSeek 聊天
 
-基于 DeepSeek V4 Flash 模型。
+基于 DeepSeek-V4.1-Flash 模型（模型名 deepseek-flash）。
 
 - 限制：每 IP 每天 40 次、每小时 10 次
 - 输入上限：5000 tokens
@@ -67,6 +67,32 @@ for line in resp.iter_lines(decode_unicode=True):
         if content:
             print(content, end="", flush=True)
 ```
+
+### 系统提示词注入
+
+所有免费聊天请求会自动在消息列表最前面注入一条 **system 消息**，包含**净读平台信息**（简介、核心功能、反馈渠道）、**当前日期**（年月日）与请求 **IP 属地**（精确到省/市）。你无需额外处理；如需告知模型用户的设备与浏览环境，可附带可选的 `client_env` 字段：
+
+```python
+import requests
+
+resp = requests.post(
+    "https://jingdu.qzz.io/api/deepseek/free/chat/completions",
+    json={
+        "messages": [
+            {"role": "user", "content": "帮我做一个演示文稿"}
+        ],
+        "client_env": {"device": "mobile", "orientation": "portrait"}
+    },
+    timeout=60,
+)
+```
+
+| 字段 | 说明 |
+|------|------|
+| `device` | `mobile`（移动端）或 `desktop`（桌面端） |
+| `orientation` | `portrait`（竖屏）或 `landscape`（横屏） |
+
+> 注入的 system 消息只包含上述环境信息，不影响消息格式兼容性；未提供 `client_env` 时仍会注入日期与 IP 属地。
 
 ---
 

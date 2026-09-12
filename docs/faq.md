@@ -42,15 +42,14 @@
 
 目前支持以下模型：
 
-- DeepSeek V4 Flash（通用对话，模型名：deepseek-v4-flash）
-- DeepSeek V4 Flash Vision（图像理解，模型名：deepseek-v4-flash-vision-exp，实验性）
+- DeepSeek-V4.1-Flash（通用对话 + 图像理解，模型名：deepseek-flash）
 - DeepSeek V4 Pro（深度推理，模型名：deepseek-v4-pro）
 - Qwen3.7 Plus（千问增强版）
 - Qwen3.6 Flash（千问快速版）
 - Qwen3.5 Flash（千问轻量版）
 - Qwen3.7 Max（千问旗舰版）
 
-> 旧版模型名称（deepseek-chat、deepseek-reasoner）仍可兼容使用。
+> 旧版模型名称（deepseek-chat、deepseek-reasoner、deepseek-v4-flash、deepseek-v4-flash-vision-exp）仍可兼容使用，系统会自动映射到对应的当前模型。
 
 ### AI 聊天记录会保存吗？
 
