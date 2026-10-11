@@ -50,6 +50,9 @@
 - X-Frame-Options
 - X-Content-Type-Options
 - X-XSS-Protection
+- Content-Security-Policy（CSP）：主站页面使用严格策略（仅允许自身与必要的第三方资源）；
+  工具箱的 `/tool/`、`/tool-info/` 页面使用单独放行的策略，因为工具是自包含的静态页面，
+  需要运行自己的内联脚本并预览用户粘贴的 HTML，否则浏览器会直接拦截内容
 
 ### 反爬虫
 

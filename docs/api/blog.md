@@ -110,3 +110,27 @@ POST /blog/comment/delete/<comment_id>
 ```
 
 **需要认证**（仅评论者或博客作者）
+
+
+### 点赞 / 取消点赞
+
+```
+POST /blog/like/<blog_id>
+```
+
+**需要认证**（Session），**无请求体**。
+
+```json
+{"success": true, "attitude": 1, "liked": true, "disliked": false, "like_count": 1, "dislike_count": 0}
+```
+
+### 点踩 / 取消点踩
+
+```
+POST /blog/dislike/<blog_id>
+```
+
+**需要认证**（Session），**无请求体**。
+
+同一篇文章只能点赞或点踩，以相同态度再次调用即为取消。净币结算规则：点赞作者 `+2`，点踩作者 `-1`，
+取消操作对称回退。详见 [净币接口](/api/coin)。

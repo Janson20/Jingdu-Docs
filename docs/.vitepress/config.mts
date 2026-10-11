@@ -12,6 +12,7 @@ export default defineConfig({
         text: '功能指南',
         items: [
           { text: '书籍阅读', link: '/features/reading' },
+          { text: '我的书架', link: '/features/shelf' },
           { text: '写作发布', link: '/features/writing' },
           { text: '博客系统', link: '/features/blog' },
           { text: '论坛交流', link: '/features/forum' },
@@ -20,6 +21,8 @@ export default defineConfig({
           { text: 'AI 聊天', link: '/features/ai-chat' },
           { text: 'AI 推荐', link: '/features/recommend' },
           { text: '私信', link: '/features/message' },
+          { text: '净币系统', link: '/features/coin' },
+          { text: 'VIP 章节', link: '/features/vip-chapter' },
           { text: '等级系统', link: '/features/level' },
         ]
       },
@@ -33,12 +36,14 @@ export default defineConfig({
           { text: '认识净读', link: '/guide/getting-started' },
           { text: '注册与登录', link: '/guide/auth' },
           { text: '个人资料设置', link: '/guide/profile' },
+          { text: '界面说明与提示', link: '/guide/interface' },
         ]
       },
       {
         text: '功能指南',
         items: [
           { text: '书籍阅读', link: '/features/reading' },
+          { text: '我的书架', link: '/features/shelf' },
           { text: '书籍评价', link: '/features/review' },
           { text: '写作发布', link: '/features/writing' },
           { text: '催更功能', link: '/features/urge' },
@@ -49,10 +54,11 @@ export default defineConfig({
           { text: 'AI 聊天', link: '/features/ai-chat' },
           { text: 'AI 推荐', link: '/features/recommend' },
           { text: '私信', link: '/features/message' },
+          { text: '净币系统', link: '/features/coin' },
+          { text: 'VIP 章节', link: '/features/vip-chapter' },
           { text: '等级系统', link: '/features/level' },
           { text: '聊天室', link: '/features/chat' },
           { text: '工具箱', link: '/features/toolkit' },
-          { text: 'B站问号榜', link: '/features/biliqml' },
         ]
       },
       {
@@ -64,6 +70,8 @@ export default defineConfig({
           { text: '博客接口', link: '/api/blog' },
           { text: '论坛接口', link: '/api/forum' },
           { text: '段评接口', link: '/api/para-comment' },
+          { text: '书架接口', link: '/api/shelf' },
+          { text: '净币接口', link: '/api/coin' },
           { text: '资源接口', link: '/api/resource' },
           { text: '私信接口', link: '/api/message' },
           { text: 'DeepSeek 代理', link: '/api/deepseek' },

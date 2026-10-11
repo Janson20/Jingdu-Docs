@@ -35,6 +35,9 @@ POST /api/deepseek/v1/chat/completions
 | model | string | 是 | 模型名称 |
 | messages | array | 是 | 消息列表 |
 | stream | boolean | 否 | 是否启用流式响应（默认 false） |
+| max_tokens | integer | 否 | 输出长度上限；**不传即不限制输出长度**，模型会生成到自然结束或上下文用尽 |
+
+> 代理默认不限制输出长度：若请求未携带 `max_tokens`，服务端会按“不限制”处理（未登录的免费体验接口不受影响，仍为 2000 tokens 上限）。输出越长消耗的积分越多。
 
 ### 多模态（图片）请求示例
 

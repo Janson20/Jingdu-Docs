@@ -129,28 +129,27 @@ POST /forum/comment/delete/<comment_id>
 
 **需要认证**（仅评论者或帖子作者）
 
-## 催更历史
+## 催更次数
 
 ```
-GET /api/urge_history
+GET /api/urge/book/<book_id>
 ```
 
-### 查询参数
+**无需认证**
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| page | integer | 否 | 页码 |
-| per_page | integer | 否 | 每页数量 |
+返回单本书的累计催更次数（不再提供催更历史明细接口）。
 
-## B站问号榜
+### 响应示例
 
+```json
+{
+  "success": true,
+  "data": {
+    "book_id": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+    "count": 12
+  }
+}
 ```
-GET /api/bili_qml
-```
-
-返回 B 站千粉新号排行榜数据。
-
----
 
 ## 帖子互动（点赞/收藏/转发）
 
@@ -320,3 +319,43 @@ GET /forum/my-bookmarks
 **需要认证**（Session）
 
 返回当前用户收藏过的所有帖子列表（分页）。
+
+
+### 点踩 / 取消点踩
+
+```
+POST /forum/dislike/<post_id>
+```
+
+**需要认证**（Session）
+
+**无请求体**（CSRF 令牌通过 `X-CSRFToken` 请求头传递）。
+
+同一帖子只能点赞或点踩：如果当前已点赞，改为点踩时会先回退点赞结算再施加点踩。再次以相同态度调用即为取消。
+
+```json
+{
+  "success": true,
+  "attitude": -1,
+  "liked": false,
+  "disliked": true,
+  "like_count": 0,
+  "dislike_count": 1,
+  "capped": false,
+  "self_action": false
+}
+```
+
+- `attitude`：`1` 点赞、`-1` 点踩、`0` 未操作
+- `capped`：为 `true` 表示该帖作者今日被点踩扣分已达上限，本次不再扣减净币（态度仍记录）
+- `self_action`：为 `true` 表示是对自己的帖子操作，不结算净币
+
+净币结算规则：点赞作者 `+2`，点踩作者 `-1`，取消操作对称回退。详见 [净币接口](/api/coin)。
+
+### 帖子互动状态
+
+```
+GET /api/forum/<post_id>/status
+```
+
+返回 `attitude`、`disliked`、`dislike_count` 等字段（与 `liked`、`like_count`、`bookmark_count`、`repost_count` 并列）。
