@@ -523,6 +523,8 @@ Token 格式: `base64_json.sha256_signature`（服务端实现细节，App 端�
 | file_attached | bool | 否 | false | 本次消息是否附带了文件内容 |
 | deep_think | bool | 否 | false | 当 model 为 deepseek-flash 时设为 true 自动切换为 deepseek-v4-pro |
 
+> 联网搜索目前仅在网页版 AI 聊天提供，App 接口暂不支持 `web_search` 参数。
+
 **models 说明**:
 
 | id | 提供商 | 说明 |
@@ -804,7 +806,7 @@ Fill-in-the-Middle 补全。**需要登录**，**仅支持 DeepSeek 模型**。
 
 | 扩展名 | 文件类型 | 引擎 |
 |--------|----------|------|
-| .pdf | PDF文档 | PyMuPDF |
+| .pdf | PDF文档 | pypdfium2 |
 | .docx, .doc | Word文档 | python-docx |
 | .xlsx, .xls | Excel表格 | openpyxl |
 

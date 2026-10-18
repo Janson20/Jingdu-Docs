@@ -20,6 +20,10 @@ GET /api/books
 
 每本书都包含 `tags` 数组（如 `["玄幻", "热血"]`）；`category` 字段保留为第一个标签，兼容旧调用方。
 
+每本书还会附带 `cover_url` —— 可直接用于 `<img src>` 的封面地址：有上传封面时指向 `/static/...`，没有封面时指向按书名与作者生成的主题色占位封面（`/cover/placeholder.svg?title=..&author=..`）。`cover` 字段仍为原始封面相对路径（可能为空串）。
+
+转载书籍额外包含 `is_repost`（`true`）与 `original_author`（原作者）两个字段；原创书籍不返回这两个字段。
+
 ## 获取书籍详情
 
 ```
@@ -49,10 +53,12 @@ POST /api/books
 | token | string | 是 | 认证 Token |
 | title | string | 是 | 书名 |
 | author | string | 是 | 作者 |
-| cover | string | 否 | 封面 URL |
+| cover | string | 否 | 封面相对路径（相对 `static/`）；留空则自动生成主题色占位封面 |
 | desc | string | 否 | 描述 |
 | tags | array | 否 | 书籍标签，最多 5 个、每个不超过 10 个字符；留空则记为「无标签」 |
 | category | string | 否 | 分类（兼容旧参数，仅在未传 `tags` 时作为唯一标签） |
+| is_repost | boolean | 否 | 是否为**公共版权作品转载**，默认 `false` |
+| original_author | string | 否 | 转载书籍的原作者；`is_repost=true` 时**必填**（最多 30 个字符），否则返回 400 |
 
 ### 请求示例
 
@@ -65,6 +71,29 @@ POST /api/books
   "tags": ["武侠", "热血"]
 }
 ```
+
+转载公共领域作品的示例（正文非本人创作，须标注原作者）：
+
+```json
+{
+  "token": "<认证 Token>",
+  "title": "呐喊",
+  "author": "张三",
+  "desc": "鲁迅小说集（公共领域）",
+  "is_repost": true,
+  "original_author": "鲁迅",
+  "tags": ["经典", "短篇"]
+}
+```
+
+::: warning 转载书籍的限制
+标记为转载的书籍**不能开启 VIP 章节**，也**不参与净币收益**，正文不计入「长篇作者」字数成就。
+书库、首页与详情页会显示「转载」徽标与原作者，详情页附公共领域说明。
+:::
+
+::: tip EPUB 整本导入
+上传 `.epub` 自动解析成章节目前只在**网页「新建书籍」**提供（`POST /parse_epub` 预览 + `POST /add_book` 携带 `epub` 文件），开放 API 走 JSON，不支持文件上传。
+:::
 
 标签规则详见 [书籍标签](/features/writing#书籍标签)。
 

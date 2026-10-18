@@ -14,7 +14,9 @@
 | `book_id` | string | 书籍 ID |
 | `title` | string | 书名（书籍下架时为「未知书籍」） |
 | `author` / `author_id` | string | 作者名与作者 ID |
-| `cover` | string | 封面相对路径（用于 `/static/<cover>`） |
+| `cover` | string | 封面相对路径（用于 `/static/<cover>`；为空表示使用主题色占位封面） |
+| `is_repost` | bool | 是否为公共版权作品转载（仅转载书籍返回 `true`） |
+| `original_author` | string | 转载书籍的原作者（原创书籍为空串） |
 | `desc` | string | 简介 |
 | `tags` | array | 书籍标签 |
 | `group_name` | string | 所属分组，空串表示未分组 |
@@ -60,7 +62,7 @@ GET /api/shelf?group=在读&sort=read&page=1&per_page=24
         "book_id": "068bbf8d-...",
         "title": "示例小说",
         "author": "示例作者",
-        "cover": "images/cover.jpg",
+        "cover": "images/example.jpg",
         "tags": ["玄幻"],
         "group_name": "在读",
         "note": "看到第 3 卷",
