@@ -17,7 +17,7 @@
 ```python
 import requests
 
-resp = requests.get("https://jingdu.qzz.io/api/deepseek/free/status")
+resp = requests.get("https://jingdu.org/api/deepseek/free/status")
 print(resp.json())
 # {"daily_limit": 40, "hourly_limit": 10, "daily_remaining": 38, "hourly_remaining": 8}
 ```
@@ -28,7 +28,7 @@ print(resp.json())
 import requests
 
 resp = requests.post(
-    "https://jingdu.qzz.io/api/deepseek/free/chat/completions",
+    "https://jingdu.org/api/deepseek/free/chat/completions",
     json={
         "messages": [
             {"role": "user", "content": "用一句话介绍人工智能"}
@@ -46,7 +46,7 @@ print(data["choices"][0]["message"]["content"])
 import requests
 
 resp = requests.post(
-    "https://jingdu.qzz.io/api/deepseek/free/chat/completions",
+    "https://jingdu.org/api/deepseek/free/chat/completions",
     json={
         "messages": [
             {"role": "user", "content": "写一首关于春天的诗"}
@@ -76,7 +76,7 @@ for line in resp.iter_lines(decode_unicode=True):
 import requests
 
 resp = requests.post(
-    "https://jingdu.qzz.io/api/deepseek/free/chat/completions",
+    "https://jingdu.org/api/deepseek/free/chat/completions",
     json={
         "messages": [
             {"role": "user", "content": "帮我做一个演示文稿"}
@@ -108,7 +108,7 @@ resp = requests.post(
 ```python
 import requests
 
-resp = requests.get("https://jingdu.qzz.io/api/deepseek/free/image/status")
+resp = requests.get("https://jingdu.org/api/deepseek/free/image/status")
 print(resp.json())
 # {"daily_limit": 20, "daily_remaining": 18}
 ```
@@ -124,7 +124,7 @@ def recognize_image(filepath: str) -> dict:
         b64 = base64.b64encode(f.read()).decode("utf-8")
 
     resp = requests.post(
-        "https://jingdu.qzz.io/api/deepseek/free/image/recognize",
+        "https://jingdu.org/api/deepseek/free/image/recognize",
         json={"image": b64, "mime_type": "image/png"},
         timeout=60,
     )
@@ -147,7 +147,7 @@ def recognize_image_url(image_url: str) -> dict:
     b64 = base64.b64encode(resp.content).decode("utf-8")
 
     resp = requests.post(
-        "https://jingdu.qzz.io/api/deepseek/free/image/recognize",
+        "https://jingdu.org/api/deepseek/free/image/recognize",
         json={"image": b64, "mime_type": resp.headers.get("Content-Type", "image/jpeg")},
         timeout=60,
     )

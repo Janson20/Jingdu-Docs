@@ -4,7 +4,7 @@
 
 ## 基本信息
 
-- **Base URL**: `https://jingdu.qzz.io`
+- **Base URL**: `https://jingdu.org`
 - **认证方式**: Session Cookie 或 Token（请求头 `Authorization: Bearer <token>`）
 - **频率限制**: 100 次/小时（API 接口）
 - **响应格式**: JSON
@@ -63,4 +63,5 @@ API 支持两种认证方式：
 | 论坛 | 帖子 CRUD、评论 | [论坛接口](/api/forum) |
 | 段评 | 段落评论、点赞、回复 | [段评接口](/api/para-comment) |
 | 资源 | 资源 CRUD、版本管理 | [资源接口](/api/resource) |
+| 作品流 | 首页无限滚动、类别切换、我的作品 | [作品流接口](/api/works) |
 | DeepSeek | AI 对话代理 | [DeepSeek 代理](/api/deepseek) |

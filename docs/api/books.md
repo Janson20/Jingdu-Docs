@@ -20,7 +20,9 @@ GET /api/books
 
 每本书都包含 `tags` 数组（如 `["玄幻", "热血"]`）；`category` 字段保留为第一个标签，兼容旧调用方。
 
-每本书还会附带 `cover_url` —— 可直接用于 `<img src>` 的封面地址：有上传封面时指向 `/static/...`，没有封面时指向按书名与作者生成的主题色占位封面（`/cover/placeholder.svg?title=..&author=..`）。`cover` 字段仍为原始封面相对路径（可能为空串）。
+每本书还会附带 `cover_url` —— 可直接用于 `<img src>` 的封面地址：平台上传的封面指向 CDN 地址（`https://cdn.jingdu.org/cover/...`），历史静态封面指向 `/static/...`，没有封面时指向按书名与作者生成的主题色占位封面（`/cover/placeholder.svg?title=..&author=..`）。
+
+`cover` 字段为原始封面值（可能为空串）：新上传的封面形如 `oss:cover/<作者UUID>/<文件名>`，历史数据是相对 `static/` 的路径，管理员也可以填写外链。**前端请优先使用 `cover_url`**，不要再用 `'/static/' + cover` 拼地址。该地址由 CDN 提供，`<img>` 需要带 `referrerpolicy="no-referrer"`（CDN 启用了 Referer 防盗链）。
 
 转载书籍额外包含 `is_repost`（`true`）与 `original_author`（原作者）两个字段；原创书籍不返回这两个字段。
 
@@ -53,12 +55,23 @@ POST /api/books
 | token | string | 是 | 认证 Token |
 | title | string | 是 | 书名 |
 | author | string | 是 | 作者 |
-| cover | string | 否 | 封面相对路径（相对 `static/`）；留空则自动生成主题色占位封面 |
+| cover | string | 否 | 封面引用：平台上传封面返回的 `oss:` 标识、外链，或相对 `static/` 的路径；留空则自动生成主题色占位封面。开放 API 不能直接上传图片文件，非法值返回 400 |
 | desc | string | 否 | 描述 |
 | tags | array | 否 | 书籍标签，最多 5 个、每个不超过 10 个字符；留空则记为「无标签」 |
 | category | string | 否 | 分类（兼容旧参数，仅在未传 `tags` 时作为唯一标签） |
 | is_repost | boolean | 否 | 是否为**公共版权作品转载**，默认 `false` |
 | original_author | string | 否 | 转载书籍的原作者；`is_repost=true` 时**必填**（最多 30 个字符），否则返回 400 |
+
+### 审核与草稿说明
+
+创建书籍前会经过发布前算法风控与 AI 内容审核（书名 / 简介 / 标签）：
+
+- 审核通过：返回 `201` 与 `book_id`；新书是**草稿**，在发布首章并通过审核前不会出现在书库、搜索、推荐与站点地图中；
+- 需要人工复核：返回 `202`、`pending: true`，此时**不会创建书籍**，管理员通过后才会创建；
+- 未通过：返回 `400` 与原因，不会创建；
+- 每个账号最多同时保留 3 本无正文草稿，达到上限返回 `429`；
+- 封面的视觉审核与 OSS 存储只发生在网页端「新建书籍」上传文件时；开放 API 传入的 `cover` 只是引用，不会下载或转存外部图片；
+- 空书创建不发放发布经验。
 
 ### 请求示例
 
@@ -143,7 +156,9 @@ POST /api/books/<book_id>/chapters
 |------|------|------|------|
 | token | string | 是 | 认证 Token |
 | title | string | 是 | 章节标题 |
-| content | string | 是 | 章节内容 |
+| content | string | 是 | 章节内容（至少 50 个有效字符） |
+
+章节同样先审后发：审核通过返回 `201`；需要人工复核返回 `202` 且不写入，管理员通过后自动追加；未通过返回 `400`。章节会与本书已有章节做近似比对，复制已有章节刷字数会被拒绝。
 
 ## 获取章节内容
 
@@ -180,6 +195,35 @@ DELETE /api/books/<book_id>/chapters/<chapter_id>
 | 参数 | 类型 | 必填 | 说明 |
 |------|------|------|------|
 | token | string | 是 | 认证 Token |
+
+## 作品月票
+
+```
+GET /api/books/<book_id>/monthly-ticket
+```
+
+公开接口，无需认证。返回：
+
+```json
+{"success": true, "data": {"book_id": "...", "month": "2026-10", "tickets": 12, "voters": 10, "rank": 3}}
+```
+
+- `tickets`：本月已投出的票数。
+- `voters`：去重投票人数；推荐系统优先使用该值。
+- `rank`：按票数计算的当前排名，0 表示本月还没有票。
+
+月票的兑换、投出、钱包与榜单接口见 [净币接口](/api/coin#月票接口)。
+
+## 推荐反馈
+
+```
+POST /api/recommend/feedback
+Content-Type: application/json
+
+{"book_id": "...", "action": "dislike"}
+```
+
+需要登录。记录「不感兴趣」后会减少同类作品推荐；已读作品也会在缓存读取时被过滤。
 
 ## 旧版兼容接口
 

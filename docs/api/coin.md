@@ -158,6 +158,147 @@ Content-Type: application/json
 价格由服务端按章节字数重新计算。成功返回 `{success, message, price, balance, chapter_no}`；
 净币不足返回 **400**；重复购买返回 **200** 且 `success: false`（`message` 含「已经购买」）。
 
+### 批量解锁价格预检
+
+```
+GET /coin/api/vip/<book_id>/batch-quote?from=12&to=20
+```
+
+公开接口。返回所选区间内可解锁章数、总价、字数、当前余额与已购跳过数：
+
+```json
+{
+  "success": true,
+  "data": {
+    "start_chapter": 12,
+    "total_chapters": 40,
+    "from_chapter": 12,
+    "to_chapter": 20,
+    "requested": 9,
+    "purchased": 2,
+    "count": 7,
+    "words": 10500,
+    "total_price": 110,
+    "balance": 500,
+    "is_author": false,
+    "first_locked": 12,
+    "last_locked": 40
+  }
+}
+```
+
+未登录时按「全部未购」计算，`balance` 为 0；作者本人调用返回 `is_author: true` 且 `count` 为 0。
+
+### 批量解锁 VIP 章节
+
+```
+POST /coin/api/vip/<book_id>/purchase-batch
+Content-Type: application/json
+
+{"from_chapter": 12, "to_chapter": 20, "expected_total": 110}
+{"chapter_nos": [12, 13, 14], "expected_total": 30}
+```
+
+- 两种定位方式二选一：闭区间 `from_chapter`/`to_chapter`，或显式 `chapter_nos` 列表；
+- 已解锁章节自动跳过；整批在**同一个写事务**内完成，余额不足时整批不扣费；
+- `expected_total` 可选：与服务端重算总价不一致时返回 **409** 与 `code: "quote_changed"`，不会扣费；
+- 成功返回 `{success, message, count, price, balance}`；全部章节都已解锁返回 **200** 且 `code: "already"`；
+- 价格、作者 80% 分成与单章购买完全一致，服务端逐章重新计算，不信任前端价格。
+
+## 月票接口
+
+所有接口需要登录（网页 Session 或 Bearer Token），并已在服务端登记 CSRF 豁免。
+**月票当月有效，未投出即过期，不退款；不提供任何退款接口。**
+
+### 月票钱包
+
+```
+GET /coin/api/monthly-ticket/wallet
+```
+
+返回本月库存、我的未投出/已投出票、等级月票额度、消费进度。示例：
+
+```json
+{
+  "success": true,
+  "data": {
+    "balance": 8000,
+    "month": "2026-10",
+    "inventory": {"book_count": 120, "total": 1200, "paid_issued": 340, "remaining": 860},
+    "paid": {"limit": 10, "bought": 2, "remaining": 8},
+    "free": {"level": 7, "entitlement": 2, "granted": 1, "next_grant_at": "2026-10-15"},
+    "spend": {"amount": 3200, "threshold": 5000, "granted": false},
+    "tickets": [
+      {"id": 101, "ticket_type": "paid", "status": "unused", "expires_at": "2026-10-31 23:59:59"}
+    ]
+  }
+}
+```
+
+### 兑换付费月票
+
+```
+POST /coin/api/monthly-ticket/exchange
+Content-Type: application/json
+
+{"quantity": 2}
+```
+
+2000 净币/张；每人每自然月最多 10 张；受本月库存限制。
+成功返回 `{success, message, balance, quantity, ticket_ids, tickets, inventory}`。
+库存售罄或超过个人上限返回 **409**；净币不足返回 **400**。
+
+### 投出月票
+
+```
+POST /coin/api/monthly-ticket/cast
+Content-Type: application/json
+
+{"ticket_id": 101, "book_id": "..."}
+```
+
+- 只能投自己未投出、未过期的票。
+- 不能投自己的作品；同一本书每人每月最多 1 张。
+- 投出后作者获得 200 净币（转载公共版权作品除外），不可撤回、不退款。
+- 重复投同一本返回 **409**；票已过期/不是本人返回 **400**。
+
+### 作品月票计数
+
+```
+GET /coin/api/monthly-ticket/status?book_id=<book_id>
+```
+
+返回作品本月票数、去重投票人数、排名，以及当前用户是否有可投的票。
+未登录也可以读取公开计数。
+
+### 我的月票记录
+
+```
+GET /coin/api/monthly-ticket/history
+```
+
+返回当前用户最近的月票记录（含状态：unused/cast/expired/revoked）。
+
+### 月票榜与库存（公开）
+
+```
+GET /api/monthly-ticket/inventory?month=YYYY-MM
+GET /api/monthly-ticket/ranking?month=YYYY-MM&limit=50
+GET /api/books/<book_id>/monthly-ticket
+```
+
+榜单按票数、去重投票人数、book_id 稳定排序；只统计已投出的票。
+
+### 管理端
+
+```
+GET  /acp/api/monthly-tickets/overview?month=YYYY-MM
+POST /acp/api/monthly-tickets/inventory   {"month":"2026-10","total":1200,"reason":"..."}
+POST /acp/api/monthly-tickets/<id>/revoke {"reason":"..."}
+```
+
+撤销异常票会扣回作者已得的 200，不向用户退款。
+
 ## 移动端接口（`/api/app/*`）
 
 统一使用 `Authorization: Bearer <token>`，响应封装为 `{"success": true, "data": {...}}`

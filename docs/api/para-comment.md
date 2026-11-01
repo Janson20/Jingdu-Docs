@@ -2,7 +2,7 @@
 
 段评（段落评论）即阅读页中针对具体段落发表的评论，支持点赞、楼中楼回复（最多两层）等能力。
 
-- **Base URL**: `https://jingdu.qzz.io`
+- **Base URL**: `https://jingdu.org`
 - **认证方式**: Session Cookie
 - **CSRF**: 无需携带（JSON API 豁免）
 - **发布限流**: 30 次/分钟
