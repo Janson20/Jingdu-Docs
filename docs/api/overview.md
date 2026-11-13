@@ -4,7 +4,7 @@
 
 ## 基本信息
 
-- **Base URL**: `https://jingdu.qzz.io`
+- **Base URL**: `https://jingdu.org`
 - **认证方式**: Session Cookie 或 Token（请求头 `Authorization: Bearer <token>`）
 - **频率限制**: 100 次/小时（API 接口）
 - **响应格式**: JSON
@@ -63,4 +63,21 @@ API 支持两种认证方式：
 | 论坛 | 帖子 CRUD、评论 | [论坛接口](/api/forum) |
 | 段评 | 段落评论、点赞、回复 | [段评接口](/api/para-comment) |
 | 资源 | 资源 CRUD、版本管理 | [资源接口](/api/resource) |
+| 内容互动 | 帖子 / 博客 / 资源的点赞、收藏、转发、评论与卡片 | [作品流](/features/works#统一互动) |
+| 作品流 | 首页无限滚动、类别切换、我的作品 | [作品流接口](/api/works) |
 | DeepSeek | AI 对话代理 | [DeepSeek 代理](/api/deepseek) |
+
+## 统一内容互动接口
+
+帖子、博客、资源共用以下接口，`<type>` 取 `forum_post`、`blog`、`resource`：
+
+- `GET /api/content/<type>/<id>/status` — 当前用户态度、收藏状态与互动计数
+- `POST /api/content/<type>/<id>/attitude` — 点赞 / 点踩，JSON `{"attitude": 1}` 或 `{"attitude": -1}`
+- `POST /api/content/<type>/<id>/bookmark` — 收藏 / 取消收藏
+- `POST /api/content/<type>/<id>/repost` — 转发给私信好友，JSON `{"target_uuid": "..."}`
+- `GET /api/content/<type>/<id>/card` — 转发卡片数据
+- `GET /api/content/<type>/<id>/comments` — 评论树
+- `POST /api/content/<type>/<id>/comments` — 发表评论或回复
+- `POST /api/content/comments/<comment_id>` — 删除评论
+
+旧的 `/forum/like`、`/blog/like` 等接口继续保留，并写入同一份互动数据。

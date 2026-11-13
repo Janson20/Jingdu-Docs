@@ -14,7 +14,7 @@
 
 ### 敏感词过滤
 
-- 使用 **Aho-Corasick 算法** 进行高效敏感词过滤
+- 使用**敏感词词库**实时过滤，命中即拦
 - 用户名、签名、博客内容、帖子内容、评论等都会经过过滤
 
 ### SQL 注入防护
@@ -41,7 +41,7 @@
 ### 两步验证（2FA）
 
 - 支持 **TOTP**（身份验证器应用）和 **邮箱验证码** 两种方式
-- TOTP 使用标准 RFC 6238 算法，兼容 Google Authenticator、Microsoft Authenticator 等应用
+- 兼容 Google Authenticator、Microsoft Authenticator 等验证器应用
 - 提供 **备用恢复码**（8位数字，一次性使用），防止验证器丢失导致无法登录
 - 开启或关闭2FA需要验证当前密码
 
@@ -51,8 +51,7 @@
 - X-Content-Type-Options
 - X-XSS-Protection
 - Content-Security-Policy（CSP）：主站页面使用严格策略（仅允许自身与必要的第三方资源）；
-  工具箱的 `/tool/`、`/tool-info/` 页面使用单独放行的策略，因为工具是自包含的静态页面，
-  需要运行自己的内联脚本并预览用户粘贴的 HTML，否则浏览器会直接拦截内容
+  工具箱的运行页面单独放行工具自身需要的脚本、样式与预览内容，否则浏览器会阻止工具正常工作
 
 ### 反爬虫
 
@@ -79,10 +78,10 @@
 
 | 协议 | 说明 | 链接 |
 |------|------|------|
-| 隐私政策 | 个人信息收集、使用与保护说明 | [查看](https://jingdu.qzz.io/privacy) |
-| 用户协议 | 使用服务的权利与义务 | [查看](https://jingdu.qzz.io/user-agreement) |
-| 社区规范 | 用户生成内容的行为准则和违规处理 | [查看](https://jingdu.qzz.io/community) |
-| 版权政策 | 版权保护措施和侵权投诉流程 | [查看](https://jingdu.qzz.io/copyright) |
-| AI服务条款 | AI聊天服务的计费规则与免责声明 | [查看](https://jingdu.qzz.io/ai_service_terms) |
+| 隐私政策 | 个人信息收集、使用与保护说明 | [查看](https://jingdu.org/privacy) |
+| 用户协议 | 使用服务的权利与义务 | [查看](https://jingdu.org/user-agreement) |
+| 社区规范 | 用户生成内容的行为准则和违规处理 | [查看](https://jingdu.org/community) |
+| 版权政策 | 版权保护措施和侵权投诉流程 | [查看](https://jingdu.org/copyright) |
+| AI服务条款 | AI聊天服务的计费规则与免责声明 | [查看](https://jingdu.org/ai_service_terms) |
 
 使用净读服务即表示你同意上述协议。如有疑问，请联系 janson20@qq.com 或 janson20@js20tech.cn。

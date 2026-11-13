@@ -81,10 +81,10 @@ GET /api/user/info
 
 ```bash
 # 使用 Authorization 请求头
-curl -H "Authorization: Bearer your_token_here" https://jingdu.qzz.io/api/user/info
+curl -H "Authorization: Bearer your_token_here" https://jingdu.org/api/user/info
 
 # 使用查询参数
-curl https://jingdu.qzz.io/api/user/info?token=your_token_here
+curl https://jingdu.org/api/user/info?token=your_token_here
 ```
 
 ### 响应示例

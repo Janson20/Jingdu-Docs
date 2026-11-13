@@ -1,6 +1,6 @@
 # 净读 AI 助手 App 接口文档
 
-**Base URL**: `https://jingdu.qzz.io`
+**Base URL**: `https://jingdu.org`
 
 **字符编码**: UTF-8
 
@@ -23,7 +23,7 @@
 8. [文件上传解析](#8-文件上传解析)
 9. [聊天历史管理](#9-聊天历史管理)
 10. [章节概括](#10-章节概括)
-11. [PPTX 下载](#11-pptx-下载)
+11. [文档下载](#11-文档下载)
 12. [积分系统](#12-积分系统)
 13. [每日任务](#13-每日任务)
 14. [使用统计](#14-使用统计)
@@ -41,7 +41,7 @@ Authorization: Bearer <token>
 ```
 
 Token 通过 `POST /api/app/auth/login` 获取，默认有效期 **30 天**（2592000 秒）。
-Token 格式: `base64_json.sha256_signature`（服务端实现细节，App 端无需关心）。
+Token 是不透明的字符串，App 端原样保存并在请求头携带即可，无需解析其内容。
 
 ### 响应统一格式
 
@@ -419,7 +419,7 @@ Token 格式: `base64_json.sha256_signature`（服务端实现细节，App 端�
     "username": "testuser",
     "email": "test@example.com",
     "email_verified": true,
-    "avatar": "https://jingdu.qzz.io/static/images/default_avatar.png",
+    "avatar": "https://jingdu.org/static/images/default_avatar.png",
     "description": "热爱阅读的一个人",
     "titles": ["净读用户", "读书达人"],
     "balance": 150,
@@ -514,8 +514,8 @@ Token 格式: `base64_json.sha256_signature`（服务端实现细节，App 端�
 |------|------|------|--------|------|
 | message | string | 否* | "" | 用户输入的文本消息。如果 `images` 不为空，此字段可为空 |
 | model | string | 否 | "deepseek-flash" | 模型 ID，见 config 接口的 ai_models |
-| mode | string | 否 | "html" | `"html"` 正常模式，`"pptx"` 生成 PPTX 演示文稿 |
-| book_search | bool | 否 | false | 是否允许 AI 搜索净读书库 |
+| mode | string | 否 | "html" | `"html"` 正常对话；`"docgen"` 文档生成（旧版 `"pptx"` 仍兼容，固定生成 PPT） |
+| doc_format | string | 否 | "auto" | 文档生成格式：`"auto"` 自动判断、`"docx"` Word 文档、`"pptx"` PPT 演示文稿；指定 docx/pptx 时即使 mode=html 也会进入文档生成模式 |
 | history | array | 否 | [] | 历史消息数组，每条格式 `{content: string, isUser: bool}` |
 | system_prompt | string | 否 | "" | 人设提示词，从 persona 的 system_prompt 字段获取 |
 | images | array | 否 | [] | Base64 Data URL 数组，仅 vision_models 支持 |
@@ -523,7 +523,9 @@ Token 格式: `base64_json.sha256_signature`（服务端实现细节，App 端�
 | file_attached | bool | 否 | false | 本次消息是否附带了文件内容 |
 | deep_think | bool | 否 | false | 当 model 为 deepseek-flash 时设为 true 自动切换为 deepseek-v4-pro |
 
-> 联网搜索目前仅在网页版 AI 聊天提供，App 接口暂不支持 `web_search` 参数。
+> 站内搜索与联网搜索目前仅在网页版 AI 聊天提供，App 接口暂不支持 `site_search` / `web_search` 参数。
+>
+> 文档生成模式（`mode="docgen"` 或指定 `doc_format`）不支持 `images` 图片输入；文本需求会正常发送。生成成功后会在 token 费用之外额外收取 5 积分文件生成费。
 
 **models 说明**:
 
@@ -609,13 +611,13 @@ data: {"error":"API返回错误: 401 Unauthorized"}
 
 出现此事件时立即停止读取。
 
-##### 4. PPTX 生成状态（仅 mode="pptx"）
+##### 4. 文档生成状态（mode="docgen" 或指定 doc_format 时）
 
 ```json
-data: {"pptx_status":"generating"}
+data: {"doc_status":{"phase":"generating","message":"正在生成内容与排版代码（第 1 次）..."}}
 ```
 
-每隔约 200 字符发送一次，表示 AI 正在收集 YAML 内容生成 PPTX。
+可能出现的 `phase`：`queued`（排队/准备）、`planning`（设计内容结构）、`generating`（模型生成代码，可能带已输出字数）、`rendering`（执行代码并校验产物）。客户端可只展示 `message`，收到任意 `doc_status` 都应重置输出静默超时。
 
 ##### 5. 结束事件（最后一个有效事件）
 
@@ -633,21 +635,30 @@ data: {"done":true,"cost":5,"new_balance":145,"return_amount":1,"input_tokens":1
 | peak | bool | 是否高峰时段 |
 | peak_multiplier | float | 高峰倍率 |
 
-**PPTX 模式额外字段**:
+**文档生成模式额外字段**:
 
 ```json
 {
   "done": true,
   "cost": 15,
   "new_balance": 135,
-  "pptx_result": {
+  "doc_result": {
     "success": true,
-    "pptx_filename": "abc123.pptx",
-    "pptx_url": "/api/app/chat/ppt/download/abc123.pptx"
+    "format": "docx",
+    "filename": "季度复盘.docx",
+    "download_url": "/api/app/chat/doc/download/abc123__季度复盘.docx",
+    "outline": "封面 + 核心数据 + 风险与计划",
+    "attempts": 1,
+    "error": "",
+    "additional_cost": 5
   },
-  "pptx_additional_cost": 10
+  "doc_additional_cost": 5
 }
 ```
+
+- `doc_result.success=false` 时 `download_url` 为空，`error` 给出失败原因（如模型调用失败、代码执行失败、积分不足）。
+- `attempts` 为实际尝试次数；大于 1 表示经过自动修复。
+- `doc_additional_cost` 为成功生成文件时额外收取的 5 积分，失败为 0。
 
 ##### 6. 终止标记
 
@@ -703,8 +714,8 @@ async function chatSend(requestBody) {
         return
       }
 
-      if (data.pptx_status === "generating") {
-        showPptxStatus()
+      if (data.doc_status) {
+        showDocStatus(data.doc_status.message || "正在生成文档...")
         continue
       }
 
@@ -804,11 +815,11 @@ Fill-in-the-Middle 补全。**需要登录**，**仅支持 DeepSeek 模型**。
 
 **文档类**（解析为文本）:
 
-| 扩展名 | 文件类型 | 引擎 |
-|--------|----------|------|
-| .pdf | PDF文档 | pypdfium2 |
-| .docx, .doc | Word文档 | python-docx |
-| .xlsx, .xls | Excel表格 | openpyxl |
+| 扩展名 | 文件类型 |
+|--------|----------|
+| .pdf | PDF文档 |
+| .docx, .doc | Word文档 |
+| .xlsx, .xls | Excel表格 |
 
 **代码/文本类**（直接读取为文本）:
 .py, .js, .ts, .html, .css, .java, .cpp, .c, .h, .hpp, .cs, .go, .rs, .rb, .php, .swift, .kt, .scala, .m, .sh, .bash, .sql, .r, .pl, .lua, .json, .xml, .yaml, .yml, .toml, .md, .txt, .ini, .cfg, .conf
@@ -1138,15 +1149,21 @@ Fill-in-the-Middle 补全。**需要登录**，**仅支持 DeepSeek 模型**。
 
 ---
 
-## 11. PPTX 下载
+## 11. 文档下载
 
-### GET /api/app/chat/ppt/download/`<filename>`
+### GET /api/app/chat/doc/download/`<filename>`
 
-下载之前通过 PPTX 模式生成的演示文稿文件。**需要登录**。
+下载文档生成模式产出的 Word 或 PPT 文件。**需要登录**。
 
-**Path Parameters**: `filename` — 文件名字符串，必须以 `.pptx` 结尾
+**Path Parameters**: `filename` — `doc_result.download_url` 中的文件名字符串，必须以 `.docx` 或 `.pptx` 结尾
 
-**Response**: 文件二进制流，`Content-Type: application/vnd.openxmlformats-officedocument.presentationml.presentation`，`Content-Disposition: attachment`
+**Response**: 文件二进制流：
+- Word：`Content-Type: application/vnd.openxmlformats-officedocument.wordprocessingml.document`
+- PPT：`Content-Type: application/vnd.openxmlformats-officedocument.presentationml.presentation`
+- 均带 `Content-Disposition: attachment`，文件名为生成时指定的中文名
+
+> 兼容旧地址：`GET /api/app/chat/ppt/download/<filename>` 仍然可用，仅用于升级前已生成的 PPTX 文件。
+> 文件默认保留 1 天，过期返回 404。
 
 ---
 

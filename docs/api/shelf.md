@@ -3,7 +3,7 @@
 书架用于保存用户收藏的小说、分组与私人备注。全部接口均**需要认证**：
 网页端使用 Session Cookie，移动端与第三方使用 `Authorization: Bearer <token>`。
 
-> 说明：`/api/shelf/*` 端点在服务端已登记 CSRF 豁免（与其它 JSON 蓝图一致）；
+> 说明：`/api/shelf/*` 端点已登记 CSRF 豁免（与其它 JSON 接口一致）；
 > 网页端调用时仍建议附带 `X-CSRFToken`。未登录统一返回 **401**
 > `{"success": false, "message": "请先登录"}`。
 
@@ -14,7 +14,8 @@
 | `book_id` | string | 书籍 ID |
 | `title` | string | 书名（书籍下架时为「未知书籍」） |
 | `author` / `author_id` | string | 作者名与作者 ID |
-| `cover` | string | 封面相对路径（用于 `/static/<cover>`；为空表示使用主题色占位封面） |
+| `cover` | string | 原始封面值：新封面形如 `oss:cover/<作者UUID>/<文件名>`，历史数据为相对 `static/` 的路径；为空表示使用主题色占位封面 |
+| `cover_url` | string | 可直接用于 `<img src>` 的封面地址（已解析为 CDN / static / 占位图）；**前端请使用该字段**，不要用 `/static/` 拼 `cover`。CDN 图片需带 `referrerpolicy="no-referrer"` |
 | `is_repost` | bool | 是否为公共版权作品转载（仅转载书籍返回 `true`） |
 | `original_author` | string | 转载书籍的原作者（原创书籍为空串） |
 | `desc` | string | 简介 |
@@ -62,7 +63,8 @@ GET /api/shelf?group=在读&sort=read&page=1&per_page=24
         "book_id": "068bbf8d-...",
         "title": "示例小说",
         "author": "示例作者",
-        "cover": "images/example.jpg",
+        "cover": "oss:cover/8f2c.../0123abcd.png",
+        "cover_url": "https://cdn.jingdu.org/cover/8f2c.../0123abcd.png?k=...&t=...",
         "tags": ["玄幻"],
         "group_name": "在读",
         "note": "看到第 3 卷",
